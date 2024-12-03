@@ -14,9 +14,6 @@ export class TextGeneratorService {
   isActive: boolean = false;
   dict: string[] = (germanWords as any).default;
 
-  private currentSentenceSubject = new BehaviorSubject<string>('');
-  currentSentence$ = this.currentSentenceSubject.asObservable();
-
   constructor() { }
 
   async write(){
@@ -39,8 +36,6 @@ export class TextGeneratorService {
       this.currentSentence += word;
       this.currentSentence += " ";
       this.currentWord = "";
-
-      this.currentSentenceSubject.next(this.currentSentence);
     }
   }
 
@@ -48,8 +43,6 @@ export class TextGeneratorService {
     this.pause();
     this.currentSentence = "";
     this.currentWord = "";
-
-    this.currentSentenceSubject.next(this.currentSentence);
   }
 
   pause(){
