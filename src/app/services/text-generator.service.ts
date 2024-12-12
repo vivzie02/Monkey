@@ -8,58 +8,48 @@ import { BehaviorSubject } from 'rxjs';
 export class TextGeneratorService {
 
   TIME_BETWEEN_LETTERS: number = 10;
-  book: string = "";
-  currentSentence: string = "";
-  currentWord: string = "";
-  isActive: boolean = false;
   dict: string[] = (germanWords as any).default;
+  runningServices = 0;
 
   constructor() { }
 
   async write(){
-    if(this.isActive){
-      return;
-    }
+    var book = "";
+    var currentSentence = "";
+    var currentWord = "";
 
-    this.isActive = true;
-    while(this.isActive){
+    this.runningServices++;
+    console.log(this.runningServices, "running services");
+
+    while(true){
       var word = await this.randomWord();
       if(this.dict.includes(word)){
-        this.book += word + " ";
+        book += word + " ";
       }
-      else if(this.book != ""){
+      else if(book != ""){
         //send book
-        console.log("book: ", this.book);
-        this.book = "";
+        console.log("book: ", book);
+        book = "";
       }
 
-      this.currentSentence += word;
-      this.currentSentence += " ";
-      this.currentWord = "";
+      currentSentence += word;
+      currentSentence += " ";
+      currentWord = "";
     }
-  }
-
-  clear(){
-    this.pause();
-    this.currentSentence = "";
-    this.currentWord = "";
-  }
-
-  pause(){
-    this.isActive = false;
   }
 
   async randomWord(): Promise<string>{
     var chanceToCancel = 0;
     var x = 0;
+    var word = "";
 
     do{
       x++;
-      this.currentWord += await this.randomLetter();
+      word += await this.randomLetter();
       chanceToCancel = this.enhancedSigmoid(x);
     }while(chanceToCancel < Math.random());
 
-    return this.currentWord;
+    return word;
   }
 
   async randomLetter(): Promise<string>{
