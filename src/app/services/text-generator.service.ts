@@ -17,6 +17,11 @@ export class TextGeneratorService {
     var book = "";
     var currentSentence = "";
     var currentWord = "";
+    var wordLength = 0;
+
+    if(this.runningServices >= 100){
+      return;
+    }
 
     this.runningServices++;
     console.log(this.runningServices, "running services");
@@ -25,11 +30,13 @@ export class TextGeneratorService {
       var word = await this.randomWord();
       if(this.dict.includes(word)){
         book += word + " ";
+        wordLength++;
       }
-      else if(book != ""){
+      else if(wordLength != 0){
         //send book
         console.log("book: ", book);
         book = "";
+        wordLength = 0;
       }
 
       currentSentence += word;

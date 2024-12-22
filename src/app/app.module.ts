@@ -7,19 +7,23 @@ import { RandomTextComponent } from './random-text/random-text.component';
 import { MonkeyOverviewComponent } from './monkey-overview/monkey-overview.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatGridListModule} from '@angular/material/grid-list';
+import { FormsModule } from '@angular/forms';
+import { StartPageComponent } from './start-page/start-page.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     RandomTextComponent,
     RandomTextComponent,
-    MonkeyOverviewComponent
+    MonkeyOverviewComponent,
+    StartPageComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    MatGridListModule
+    MatGridListModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

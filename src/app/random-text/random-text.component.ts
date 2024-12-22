@@ -8,9 +8,15 @@ import { TextGeneratorService } from '../services/text-generator.service';
 })
 export class RandomTextComponent {
 
-  constructor(private textGeneratorService: TextGeneratorService){ }
+  monkeys: number = 0;
+
+  constructor(
+    private textGeneratorService: TextGeneratorService
+  ){ }
 
   async write(){
-    this.textGeneratorService.write();
+    for(var i = 0; i < this.monkeys; i++){
+      this.textGeneratorService.write();
+    } 
   }
 }
