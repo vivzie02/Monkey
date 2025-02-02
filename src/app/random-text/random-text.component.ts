@@ -8,11 +8,13 @@ import { TextGeneratorService } from '../services/text-generator.service';
 })
 export class RandomTextComponent {
 
-  monkeys: number = 0;
+  monkeys: number = 1000;
 
   constructor(
     private textGeneratorService: TextGeneratorService
-  ){ }
+  ){ 
+    this.write();
+  }
 
   async write(){
     for(var i = 0; i < this.monkeys; i++){

@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import * as germanWords from '../../assets/german-words.json';
 import { BehaviorSubject } from 'rxjs';
+import { BookInputDTO } from '../DTOs/BookInputDTO';
+import { BookService } from './book.service';
+import { BookOutputDTO } from '../DTOs/BookOutputDTO';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +14,7 @@ export class TextGeneratorService {
   dict: string[] = (germanWords as any).default;
   runningServices = 0;
 
-  constructor() { }
+  constructor(private bookService: BookService) { }
 
   async write(){
     var book = "";
@@ -19,7 +22,7 @@ export class TextGeneratorService {
     var currentWord = "";
     var wordLength = 0;
 
-    if(this.runningServices >= 100){
+    if(this.runningServices >= 200){
       return;
     }
 
@@ -35,6 +38,9 @@ export class TextGeneratorService {
       else if(wordLength != 0){
         //send book
         console.log("book: ", book);
+        if(wordLength >= 2){
+          this.uploadBook(book, wordLength);
+        }
         book = "";
         wordLength = 0;
       }
@@ -53,7 +59,7 @@ export class TextGeneratorService {
     do{
       x++;
       word += await this.randomLetter();
-      chanceToCancel = this.enhancedSigmoid(x);
+      chanceToCancel = 0.15;// this.enhancedSigmoid(x);
     }while(chanceToCancel < Math.random());
 
     return word;
@@ -70,7 +76,24 @@ export class TextGeneratorService {
     return 1 / (1 + Math.pow(Math.E, (x - 5) * (-1)));
   }
 
+  linearFunc(x: number): number{
+    return x / 30;
+  }
+
   delay(ms: number) {
     return new Promise( resolve => setTimeout(resolve, ms) );
+  }
+
+  async uploadBook(content: string, wordLength: number){
+    const bookInputDto: BookInputDTO = {content: content, numberOfWords: wordLength}
+    
+    this.bookService.uploadBook(bookInputDto).subscribe({
+      next: (response: BookOutputDTO) => {
+        console.log('Successfully uploaded book', response);
+      },
+      error: (error) => {
+        console.error('Error', error);
+      }
+    });
   }
 }
